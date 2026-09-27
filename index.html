@@ -204,21 +204,117 @@ async function gerarConteudo() {
 );
     }
 
-conteudo.innerHTML = `
-  <div>
-    ${dados.imagem ? `
-      <img
-        src="${dados.imagem}"
-        alt="Arte gerada"
-        style="width:100%; max-width:600px; display:block; margin:0 auto 24px; border-radius:12px;"
-      >
-    ` : ""}
+if (dados.imagem) {
 
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const imagemGerada = new Image();
+  const logoJA = new Image();
+  const logoEmpresa = new Image();
+
+  imagemGerada.src = dados.imagem;
+  logoJA.src = jaLogoUrl;
+  logoEmpresa.src = logoBase64;
+
+  await Promise.all([
+    new Promise(resolve => imagemGerada.onload = resolve),
+    new Promise(resolve => logoJA.onload = resolve),
+    new Promise(resolve => logoEmpresa.onload = resolve)
+  ]);
+
+  canvas.width = imagemGerada.naturalWidth;
+  canvas.height = imagemGerada.naturalHeight;
+
+  // Arte criada pela IA
+  ctx.drawImage(
+    imagemGerada,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  // Área inferior reservada para os logos
+  const faixaAltura = canvas.height * 0.18;
+
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(
+    0,
+    canvas.height - faixaAltura,
+    canvas.width,
+    faixaAltura
+  );
+
+  // Função para manter a proporção original dos logos
+  function desenharLogo(img, x, y, larguraMax, alturaMax) {
+
+    const proporcao = Math.min(
+      larguraMax / img.naturalWidth,
+      alturaMax / img.naturalHeight
+    );
+
+    const largura = img.naturalWidth * proporcao;
+    const altura = img.naturalHeight * proporcao;
+
+    ctx.drawImage(
+      img,
+      x - largura / 2,
+      y - altura / 2,
+      largura,
+      altura
+    );
+  }
+
+  const centroY =
+    canvas.height - (faixaAltura / 2);
+
+  // JA à esquerda
+  desenharLogo(
+    logoJA,
+    canvas.width * 0.30,
+    centroY,
+    canvas.width * 0.35,
+    faixaAltura * 0.70
+  );
+
+  // Empresa parceira à direita
+  desenharLogo(
+    logoEmpresa,
+    canvas.width * 0.70,
+    centroY,
+    canvas.width * 0.35,
+    faixaAltura * 0.70
+  );
+
+  const arteFinal = canvas.toDataURL("image/png");
+
+  conteudo.innerHTML = `
     <div>
-      ${dados.conteudo.replace(/\n/g, "<br>")}
+      <img
+        src="${arteFinal}"
+        alt="Arte gerada"
+        style="
+          width:100%;
+          max-width:600px;
+          display:block;
+          margin:0 auto 24px;
+          border-radius:12px;
+        "
+      >
+
+      <div>
+        ${dados.conteudo.replace(/\n/g, "<br>")}
+      </div>
     </div>
-  </div>
-`;
+  `;
+
+} else {
+
+  conteudo.innerHTML =
+    dados.conteudo.replace(/\n/g, "<br>");
+
+}
 
   } catch (erro) {
 
