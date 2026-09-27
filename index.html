@@ -192,6 +192,8 @@ async function gerarConteudo() {
     );
 
     const dados = await resposta.json();
+    
+    console.log("RESPOSTA DO WORKER:", dados);
 
     if (!resposta.ok) {
      throw new Error(
