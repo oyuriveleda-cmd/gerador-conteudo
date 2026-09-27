@@ -201,8 +201,21 @@ async function gerarConteudo() {
 );
     }
 
-    conteudo.innerHTML =
-      dados.conteudo.replace(/\n/g, "<br>");
+conteudo.innerHTML = `
+  <div>
+    ${dados.imagem ? `
+      <img
+        src="${dados.imagem}"
+        alt="Arte gerada"
+        style="width:100%; max-width:600px; display:block; margin:0 auto 24px; border-radius:12px;"
+      >
+    ` : ""}
+
+    <div>
+      ${dados.conteudo.replace(/\n/g, "<br>")}
+    </div>
+  </div>
+`;
 
   } catch (erro) {
 
