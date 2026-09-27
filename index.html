@@ -130,26 +130,60 @@
   </div>
 
   <script>
-    function gerarConteudo() {
+async function gerarConteudo() {
 
-      const empresa = document.getElementById("empresa").value;
-      const acao = document.getElementById("acao").value;
+  const empresa = document.getElementById("empresa").value;
+  const acao = document.getElementById("acao").value;
 
-      if (!empresa || !acao) {
-        alert("Preencha os dois campos.");
-        return;
+  if (!empresa || !acao) {
+    alert("Preencha os dois campos.");
+    return;
+  }
+
+  const resultado = document.getElementById("resultado");
+  const conteudo = document.getElementById("conteudo");
+
+  resultado.style.display = "block";
+
+  conteudo.innerHTML = "🤖 Criando seu conteúdo...";
+
+  try {
+
+    const resposta = await fetch(
+      "https://gerador-conteudo-api.oyuriveleda.workers.dev",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          empresa: empresa,
+          acao: acao
+        })
       }
+    );
 
-      document.getElementById("resultado").style.display = "block";
+    const dados = await resposta.json();
 
-      document.getElementById("conteudo").innerHTML =
-        "<strong>" + empresa + "</strong><br><br>" +
-        "A " + empresa +
-        " está participando de uma ação especial: " +
-        acao +
-        "<br><br>" +
-        "Em breve, compartilhe essa iniciativa com sua rede!";
+    if (!resposta.ok) {
+      throw new Error(
+        dados.erro || "Erro ao gerar conteúdo."
+      );
     }
+
+    conteudo.innerHTML =
+      dados.conteudo.replace(/\n/g, "<br>");
+
+  } catch (erro) {
+
+    conteudo.innerHTML =
+      "❌ Erro ao gerar conteúdo:<br><br>" +
+      erro.message;
+
+  }
+}
   </script>
 
 </body>
