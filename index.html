@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Conteúdo</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 32px;
+    }
+
+    p {
+      color: #666;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin-top: 24px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 28px;
+      padding: 16px;
+      border: 0;
+      border-radius: 8px;
+      background: #111;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    #resultado {
+      display: none;
+      margin-top: 30px;
+      padding: 24px;
+      background: #f7f7f7;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h1>Gerador de Conteúdo</h1>
+
+      <p>
+        Crie automaticamente um conteúdo para divulgar sua ação.
+      </p>
+
+      <label for="empresa">Nome da empresa</label>
+      <input
+        type="text"
+        id="empresa"
+        placeholder="Ex.: Empresa Exemplo"
+      >
+
+      <label for="acao">O que você quer divulgar?</label>
+      <textarea
+        id="acao"
+        placeholder="Ex.: Workshop de preparação para o mercado de trabalho para jovens."
+      ></textarea>
+
+      <button onclick="gerarConteudo()">
+        GERAR CONTEÚDO
+      </button>
+
+      <div id="resultado">
+
+        <h2>Seu conteúdo</h2>
+
+        <p id="conteudo"></p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function gerarConteudo() {
+
+      const empresa = document.getElementById("empresa").value;
+      const acao = document.getElementById("acao").value;
+
+      if (!empresa || !acao) {
+        alert("Preencha os dois campos.");
+        return;
+      }
+
+      document.getElementById("resultado").style.display = "block";
+
+      document.getElementById("conteudo").innerHTML =
+        "<strong>" + empresa + "</strong><br><br>" +
+        "A " + empresa +
+        " está participando de uma ação especial: " +
+        acao +
+        "<br><br>" +
+        "Em breve, compartilhe essa iniciativa com sua rede!";
+    }
+  </script>
+
+</body>
+</html>
