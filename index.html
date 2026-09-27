@@ -167,11 +167,13 @@ async function gerarConteudo() {
 
     const dados = await resposta.json();
 
-    if (!resposta.ok) {
-      throw new Error(
-        dados.erro || "Erro ao gerar conteúdo."
-      );
-    }
+ if (!resposta.ok) {
+  throw new Error(
+    dados.detalhes
+      ? JSON.stringify(dados.detalhes)
+      : (dados.erro || "Erro ao gerar conteúdo.")
+  );
+}
 
     conteudo.innerHTML =
       dados.conteudo.replace(/\n/g, "<br>");
