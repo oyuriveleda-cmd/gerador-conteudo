@@ -147,6 +147,14 @@ async function gerarConteudo() {
   const empresa = document.getElementById("empresa").value;
   const acao = document.getElementById("acao").value;
   const logo = document.getElementById("logo").files[0];
+  const logoBase64 = await new Promise((resolve, reject) => {
+  const reader = new FileReader();
+
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = () => reject(new Error("Não foi possível ler o logo."));
+
+  reader.readAsDataURL(logo);
+});
 
 if (!empresa || !acao || !logo) {
   alert("Preencha a empresa, a ação e envie o logo.");
@@ -172,11 +180,11 @@ if (!empresa || !acao || !logo) {
         },
 
         body: JSON.stringify({
-          empresa: empresa,
-          acao: acao
-        })
-      }
-    );
+  empresa: empresa,
+  acao: acao,
+  logo: logoBase64,
+  logoTipo: logo.type
+})
 
     const dados = await resposta.json();
 
